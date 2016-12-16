@@ -16,8 +16,12 @@
   </contributors>
   <properties>
     <oracleHome>${env.ORACLE_HOME}</oracleHome>
-    <serverUrl>${cloudServerUrl}</serverUrl>
-    <environmentCode>${targetEnvCode}</environmentCode>
+    <serverUrl>t3://localhost:7001</serverUrl> <!-- Or supply from the environment --> 
+    <environmentCode>DEV</environmentCode> <!-- Or supply this from the environment. 
+                                                Make sure data source properties file exists for the target environment coe -->
+    <jdbc.XADS.enablePhase>initialize</jdbc.XADS.enablePhase> <!--Supply preferred maven phase
+                                                                  .. or "none" to disable that particular execution -->
+    <jdbc.NonXADS.enablePhase>initialize</jdbc.NonXADS.enablePhase>
   </properties>
   <build>
     <plugins>
@@ -37,7 +41,7 @@
             </goals>
             <configuration>
               <fileName>${project.basedir}/sharedsetup/DS/createDataSource.py</fileName>
-              <args>${serverUsername} ${serverPassword} ${serverUrl} ${XADS.password}
+              <args>${serverUsername} ${serverPassword} ${serverUrl} ${XADSpassword}
                     ${project.basedir}/sharedsetup/DS/createXADS_${environmentCode}.properties</args>
             </configuration>
           </execution>
@@ -49,7 +53,7 @@
             </goals>
             <configuration>
               <fileName>${project.basedir}/sharedsetup/DS/createDataSource.py</fileName>
-              <args>${serverUsername} ${serverPassword} ${serverUrl} ${NonXADS.Password}
+              <args>${serverUsername} ${serverPassword} ${serverUrl} ${NonXADSpassword}
                     ${project.basedir}/sharedsetup/DS/NonXADS_${environmentCode}.properties</args>
             </configuration>
           </execution>
