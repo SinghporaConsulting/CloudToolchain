@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.singhpora.cloudtoolchain</groupId>
+  <artifactId>SharedSetup</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <contributors>
+    <contributor>
+      <email>jv@singhpora.com</email>
+      <name>Jang-Vijay Singh</name>
+      <organization>Singhpora Consulting #NimbleEfficientAgile</organization>
+      <organizationUrl>http://www.singhpora.com</organizationUrl>
+      <url>https://github.com/jvsingh</url>
+    </contributor>
+  </contributors>
+  <properties>
+    <oracleHome>${env.ORACLE_HOME}</oracleHome>
+    <serverUrl>${cloudServerUrl}</serverUrl>
+    <environmentCode>${targetEnvCode}</environmentCode>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.oracle.weblogic</groupId>
+        <artifactId>weblogic-maven-plugin</artifactId>
+        <version>12.2.1-0-0</version>
+        <configuration>
+          <middlewareHome>${oracleHome}</middlewareHome>
+        </configuration>
+        <executions>
+          <execution>
+            <id>WLST_createXADataSource</id>
+            <phase>${jdbc.XADS.enablePhase}</phase>
+            <goals>
+              <goal>wlst</goal>
+            </goals>
+            <configuration>
+              <fileName>${project.basedir}/sharedsetup/DS/createDataSource.py</fileName>
+              <args>${serverUsername} ${serverPassword} ${serverUrl} ${XADS.password}
+                    ${project.basedir}/sharedsetup/DS/createXADS_${environmentCode}.properties</args>
+            </configuration>
+          </execution>
+          <execution>
+            <id>WLST_createNonXADataSource</id>
+            <phase>${jdbc.NonXADS.enablePhase}</phase>
+            <goals>
+              <goal>wlst</goal>
+            </goals>
+            <configuration>
+              <fileName>${project.basedir}/sharedsetup/DS/createDataSource.py</fileName>
+              <args>${serverUsername} ${serverPassword} ${serverUrl} ${NonXADS.Password}
+                    ${project.basedir}/sharedsetup/DS/NonXADS_${environmentCode}.properties</args>
+            </configuration>
+          </execution>
+          <!-- add another execution section for any number of different data sources. 
+               The two above are just examples -->
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
