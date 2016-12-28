@@ -16,12 +16,15 @@
   </contributors>
   <properties>
     <oracleHome>${env.ORACLE_HOME}</oracleHome>
-    <serverUrl>t3://localhost:7001</serverUrl> <!-- Or supply from the environment --> 
+    <serverUrl>t3://localhost:7001</serverUrl> <!-- Or supply from the environment- 
+                                                ****use a proper SSL connection when connecting to remote servers*** 
+                                                --> 
     <environmentCode>DEV</environmentCode> <!-- Or supply this from the environment. 
                                                 Make sure data source properties file exists for the target environment coe -->
     <jdbc.XADS.enablePhase>initialize</jdbc.XADS.enablePhase> <!--Supply preferred maven phase
                                                                   .. or "none" to disable that particular execution -->
     <jdbc.NonXADS.enablePhase>initialize</jdbc.NonXADS.enablePhase>
+    <eis.DbAdapter.enablePhase>initialize</eis.DbAdapter.enablePhase><!-- updates the DbAdapter -->
   </properties>
   <build>
     <plugins>
@@ -41,8 +44,8 @@
             </goals>
             <configuration>
               <fileName>${project.basedir}/sharedsetup/DS/createDataSource.py</fileName>
-              <args>${serverUsername} ${serverPassword} ${serverUrl} ${XADSpassword}
-                    ${project.basedir}/sharedsetup/DS/createXADS_${environmentCode}.properties</args>
+              <args>${serverUsername} ${serverPassword} ${serverUrl} ${xaDSpassword}
+                    ${project.basedir}/sharedsetup/DS/XADS_${environmentCode}.properties</args>
             </configuration>
           </execution>
           <execution>
@@ -53,8 +56,20 @@
             </goals>
             <configuration>
               <fileName>${project.basedir}/sharedsetup/DS/createDataSource.py</fileName>
-              <args>${serverUsername} ${serverPassword} ${serverUrl} ${NonXADSpassword}
+              <args>${serverUsername} ${serverPassword} ${serverUrl} ${nonXADSpassword}
                     ${project.basedir}/sharedsetup/DS/NonXADS_${environmentCode}.properties</args>
+            </configuration>
+          </execution>
+          <execution>
+            <id>WLST_updateDBAdapter</id>
+            <phase>${eis.DbAdapter.enablePhase}</phase>
+            <goals>
+              <goal>wlst</goal>
+            </goals>
+            <configuration>
+              <fileName>${project.basedir}/sharedsetup/DBAdapter/updateDBAdapter.py</fileName>
+              <args>${serverUsername} ${serverPassword} ${serverUrl} 
+                ${project.basedir}/sharedsetup/DBAdapter/${environmentCode}/DBAdapterPlan.xml</args>
             </configuration>
           </execution>
           <!-- add another execution section for any number of different data sources. 

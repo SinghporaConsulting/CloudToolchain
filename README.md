@@ -1,5 +1,5 @@
 # cloud-toolchain
-Collection of scripts for common server setup tasks
+Collection of scripts for common server setup tasks and DevOps automation
 Easy to configure and repeatable
 Continuous integration ready
 
