@@ -25,6 +25,7 @@
                                                                   .. or "none" to disable that particular execution -->
     <jdbc.NonXADS.enablePhase>initialize</jdbc.NonXADS.enablePhase>
     <eis.DbAdapter.enablePhase>initialize</eis.DbAdapter.enablePhase><!-- updates the DbAdapter -->
+    <jms.Sample2JMSModule.enablePhase>initialize</jms.Sample2JMSModule.enablePhase>
   </properties>
   <build>
     <plugins>
@@ -70,6 +71,18 @@
               <fileName>${project.basedir}/sharedsetup/DBAdapter/updateDBAdapter.py</fileName>
               <args>${serverUsername} ${serverPassword} ${serverUrl} 
                 ${project.basedir}/sharedsetup/DBAdapter/${environmentCode}/DBAdapterPlan.xml</args>
+            </configuration>
+          </execution>
+           <execution>
+            <id>WLST_createJMSSample2</id>
+            <phase>${jms.Sample2JMSModule.enablePhase}</phase>
+            <goals>
+              <goal>wlst</goal>
+            </goals>
+            <configuration>
+              <fileName>${project.basedir}/sharedsetup/JMS/createQueues.py</fileName>
+              <args>${serverUsername} ${serverPassword} ${serverUrl}
+                ${project.basedir}/sharedsetup/JMS/CONFIG/Sample2JMSModule_${enviornmentCode}.xml</args>
             </configuration>
           </execution>
           <!-- add another execution section for any number of different data sources. 
