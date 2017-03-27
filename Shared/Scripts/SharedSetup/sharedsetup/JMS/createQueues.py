@@ -14,7 +14,7 @@ import sys
 from java.lang import System
 
 
-
+#todo: move away from the username/password option
 username = sys.argv[1]
 password = sys.argv[2]
 #url Format: 't3://' + sys.argv[1] + ':' + sys.argv[2]
